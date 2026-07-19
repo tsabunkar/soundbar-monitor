@@ -33,8 +33,9 @@ function updateSafeZoneFromPreset(presetName) {
   }
 }
 
-const WAVE_BUF_LEN = 7
-let waveHistory = new Array(WAVE_BUF_LEN).fill(0)
+let currentTrayStyle = 0
+const TRAYS_COLS = 7
+let traysHistory = new Array(TRAYS_COLS).fill(0)
 
 function createTrayIcon(level, fft) {
   const size = 28
@@ -61,24 +62,88 @@ function createTrayIcon(level, fft) {
     }
   }
 
-  if (fft && fft.length > 0) {
-    const voiceBins = fft.slice(0, 16)
-    const avg = voiceBins.reduce((s, v) => s + v, 0) / voiceBins.length
-    const norm = Math.min(1, Math.sqrt(avg / 255))
-
-    waveHistory.shift()
-    waveHistory.push(norm)
-
-    for (let i = 0; i < WAVE_BUF_LEN; i++) {
-      const val = waveHistory[i]
-      const h = Math.max(1, Math.round(val * (size - 2)))
-      const x = 2 + i * 4
-      fillRect(x, size - 1 - h, 3, h)
+  const fillCol = (x, w, y, h) => {
+    for (let dx = 0; dx < w; dx++) {
+      for (let dy = 0; dy < h; dy++) {
+        const px = x + dx, py = y + dy
+        if (px < 0 || px >= size || py < 0 || py >= size) continue
+        const i = (py * size + px) * 4
+        buf[i] = b; buf[i + 1] = g; buf[i + 2] = r; buf[i + 3] = 255
+      }
     }
-  } else {
-    fillRect(3, 16, 6, 10)
-    fillRect(12, 10, 6, 16)
-    fillRect(21, 4, 6, 22)
+  }
+
+  const fftAvg = (arr, start, count) => {
+    const end = Math.min(start + count, arr.length)
+    if (end <= start) return 0
+    let s = 0
+    for (let i = start; i < end; i++) s += arr[i]
+    return s / (end - start)
+  }
+
+  const hasData = fft && fft.length > 0
+
+  if (currentTrayStyle === 0) {
+    if (hasData) {
+      const voiceAvg = fftAvg(fft, 0, 16)
+      const norm = Math.min(1, Math.sqrt(voiceAvg / 255))
+      traysHistory.shift()
+      traysHistory.push(norm)
+      for (let i = 0; i < TRAYS_COLS; i++) {
+        const h = Math.max(1, Math.round(traysHistory[i] * (size - 2)))
+        fillCol(2 + i * 4, 3, size - 1 - h, h)
+      }
+    } else {
+      fillCol(3, 6, 16, 10); fillCol(12, 6, 10, 16); fillCol(21, 6, 4, 22)
+    }
+  } else if (currentTrayStyle === 1) {
+    if (hasData) {
+      const cols = size
+      const step = Math.max(1, Math.floor(fft.length / cols))
+      for (let x = 0; x < cols; x++) {
+        const avg = fftAvg(fft, x * step, step)
+        const norm = Math.min(1, avg / 255)
+        const halfH = Math.max(1, Math.round(norm * (size / 2 - 1)))
+        const cy = size / 2
+        fillCol(x, 1, Math.round(cy - halfH), halfH * 2 + 1)
+      }
+    } else {
+      fillCol(3, 6, 16, 10); fillCol(12, 6, 10, 16); fillCol(21, 6, 4, 22)
+    }
+  } else if (currentTrayStyle === 2) {
+    if (hasData) {
+      const cols = size
+      const step = Math.max(1, Math.floor(fft.length / cols))
+      for (let x = 0; x < cols; x++) {
+        const avg = fftAvg(fft, x * step, step)
+        const norm = Math.min(1, Math.sqrt(avg / 255))
+        const h = Math.max(1, Math.round(norm * (size - 1)))
+        fillCol(x, 1, size - h, h)
+      }
+    } else {
+      fillCol(3, 6, 16, 10); fillCol(12, 6, 10, 16); fillCol(21, 6, 4, 22)
+    }
+  } else if (currentTrayStyle === 3) {
+    if (hasData) {
+      const avg = fftAvg(fft, 0, fft.length)
+      const norm = Math.min(1, Math.sqrt(avg / 255))
+      const maxR = size / 2 - 1
+      const r2 = Math.max(2, Math.round(maxR * (0.15 + norm * 0.85)))
+      for (let dy = -r2; dy <= r2; dy++) {
+        for (let dx = -r2; dx <= r2; dx++) {
+          if (dx * dx + dy * dy <= r2 * r2) {
+            const px = size / 2 + dx
+            const py = size / 2 + dy
+            if (px >= 0 && px < size && py >= 0 && py < size) {
+              const i = (py * size + px) * 4
+              buf[i] = b; buf[i + 1] = g; buf[i + 2] = r; buf[i + 3] = 255
+            }
+          }
+        }
+      }
+    } else {
+      fillCol(3, 6, 16, 10); fillCol(12, 6, 10, 16); fillCol(21, 6, 4, 22)
+    }
   }
 
   const img = nativeImage.createFromBuffer(buf, { width: size, height: size })
@@ -235,6 +300,10 @@ ipcMain.on('set-preset', (_event, presetName) => {
 ipcMain.on('select-audio-device', (_event, deviceId) => {
   settings.selectedMicDevice = deviceId
   broadcastSettings()
+})
+
+ipcMain.on('set-visualizer-style', (_event, index) => {
+  currentTrayStyle = index
 })
 
 ipcMain.on('open-dev-tools', (_event) => {

@@ -18,5 +18,6 @@ contextBridge.exposeInMainWorld('soundbar', {
   setPreset: (name) => ipcRenderer.send('set-preset', name),
   selectAudioDevice: (deviceId) => ipcRenderer.send('select-audio-device', deviceId),
   getAudioInputDevices: () => ipcRenderer.invoke('get-audio-input-devices'),
+  setVisualizerStyle: (index) => ipcRenderer.send('set-visualizer-style', index),
   openDevTools: () => ipcRenderer.send('open-dev-tools')
 })

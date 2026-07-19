@@ -51,6 +51,7 @@ function resize() {
 function cycleStyle(dir) {
   currentStyle = (currentStyle + dir + STYLES.length) % STYLES.length
   document.getElementById('styleName').textContent = STYLES[currentStyle]
+  window.soundbar.setVisualizerStyle(currentStyle)
 }
 
 function hsvToRgb(h, s, v) {
@@ -228,6 +229,7 @@ function updateUI() {
 
 initCanvas()
 document.getElementById('styleName').textContent = STYLES[currentStyle]
+window.soundbar.setVisualizerStyle(currentStyle)
 
 window.soundbar.onMetricsUpdate((m) => {
   const wasInactive = !metrics.active
