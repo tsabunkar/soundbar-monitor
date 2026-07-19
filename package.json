@@ -1,0 +1,16 @@
+{
+  "name": "soundbar-monitor",
+  "version": "1.0.0",
+  "description": "Menu bar mic monitoring with RMS & Peak metering",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev"
+  },
+  "keywords": ["audio", "meter", "mic", "rms", "peak"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^43.1.1"
+  }
+}

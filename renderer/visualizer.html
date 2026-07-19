@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SoundBar Visualizer</title>
+<link rel="stylesheet" href="visualizer.css">
+</head>
+<body>
+<div class="app">
+  <header class="toolbar">
+    <span class="toolbar-title">SoundBar Visualizer</span>
+    <div class="toolbar-actions">
+      <button class="toolbar-btn" id="stylePrev" onclick="cycleStyle(-1)">‹</button>
+      <span class="style-name" id="styleName">Bars</span>
+      <button class="toolbar-btn" id="styleNext" onclick="cycleStyle(1)">›</button>
+      <select class="mic-device-select" id="micSelector" onchange="onDeviceSelect(this.value)" style="display:none"></select>
+      <button class="toolbar-btn" onclick="window.soundbar.openDevTools()" title="DevTools">⚙</button>
+    </div>
+  </header>
+
+  <div id="emptyState" class="empty-state">
+    <div class="empty-icon">🎵</div>
+    <h2>No Audio Signal</h2>
+    <p>Waiting for microphone input to visualize...</p>
+  </div>
+
+  <div id="vizContent" class="viz-content" style="display:none">
+    <canvas id="canvas"></canvas>
+  </div>
+</div>
+<script src="visualizer.js"></script>
+<script src="shared/audio-pipeline.js"></script>
+</body>
+</html>
