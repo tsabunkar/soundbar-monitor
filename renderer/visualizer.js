@@ -218,12 +218,14 @@ function updateUI() {
   const emptyState = document.getElementById('emptyState')
   const vizContent = document.getElementById('vizContent')
 
-  if (!metrics.active || !metrics.fft || metrics.fft.length === 0) {
+  const hasDevice = metrics.selectedDeviceId && metrics.selectedDeviceId !== ''
+  if (!metrics.active || !metrics.fft || metrics.fft.length === 0 || !hasDevice) {
     emptyState.style.display = 'flex'
     vizContent.style.display = 'none'
   } else {
     emptyState.style.display = 'none'
     vizContent.style.display = 'block'
+    resize()
   }
 }
 
