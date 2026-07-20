@@ -128,7 +128,7 @@ function createTrayIcon(level, fft) {
       const avg = fftAvg(fft, 0, fft.length)
       const norm = Math.min(1, Math.sqrt(avg / 255))
       const maxR = size / 2 - 1
-      const r2 = Math.max(2, Math.round(maxR * (0.15 + norm * 0.85)))
+      const r2 = Math.max(2, Math.round(maxR * (0.2 + norm * 0.8)))
       for (let dy = -r2; dy <= r2; dy++) {
         for (let dx = -r2; dx <= r2; dx++) {
           if (dx * dx + dy * dy <= r2 * r2) {

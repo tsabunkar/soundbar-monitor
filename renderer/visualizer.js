@@ -75,7 +75,7 @@ function drawBars(w, h) {
     }
     const avg = sum / step
     const norm = avg / 255
-    const barH = norm * h * 0.85
+    const barH = norm * h * 0.88
     const x = 5 + i * barW
     const hue = 200 + norm * 160
     const [r, g, b] = hsvToRgb(hue, 0.85, 0.5 + norm * 0.5)
@@ -106,7 +106,7 @@ function drawWaveform(w, h) {
     }
     const norm = (sum / step) / 255
     const x = (i / len) * w
-    const y = cy + (norm - 0.5) * h * 0.8
+    const y = cy + (norm - 0.5) * h * 0.88
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
   }
 
@@ -129,7 +129,7 @@ function drawSpectrum(w, h) {
   for (let i = 0; i < len; i++) {
     const norm = fft[i] / 255
     const x = (i / len) * w
-    const y = h - norm * h * 0.9
+    const y = h - norm * h * 0.88
     ctx.lineTo(x, y)
   }
   ctx.lineTo(w, h)
@@ -152,7 +152,7 @@ function drawCircle(w, h) {
 
   const cx = w / 2
   const cy = h / 2
-  const maxR = Math.min(cx, cy) * 0.75
+  const maxR = Math.min(cx, cy) * 0.92
   const len = 64
   const step = Math.max(1, Math.floor(fft.length / len))
 
@@ -172,7 +172,7 @@ function drawCircle(w, h) {
     }
     const norm = (sum / step) / 255
     const angle = (i / len) * Math.PI * 2 - Math.PI / 2 + phase
-    const r = baseR + norm * maxR * 0.6
+    const r = baseR + norm * maxR * 0.75
     const x = cx + Math.cos(angle) * r
     const y = cy + Math.sin(angle) * r
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
