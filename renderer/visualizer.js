@@ -88,10 +88,8 @@ function drawWaveform(w, h) {
   const fft = metrics.fft
   if (!fft || fft.length === 0) return
 
-  const len = 128
-  const step = Math.max(1, Math.floor(fft.length / len))
-  const cx = w / 2
-  const cy = h / 2
+  const len = 64
+  const step = Math.floor(fft.length / len)
 
   ctx.beginPath()
   ctx.strokeStyle = '#33ccff'
@@ -101,12 +99,10 @@ function drawWaveform(w, h) {
 
   for (let i = 0; i < len; i++) {
     let sum = 0
-    for (let j = 0; j < step; j++) {
-      sum += fft[i * step + j] || 0
-    }
+    for (let j = 0; j < step; j++) sum += fft[i * step + j] || 0
     const norm = (sum / step) / 255
     const x = (i / len) * w
-    const y = cy + (norm - 0.5) * h * 0.88
+    const y = h - norm * h * 0.88
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y)
   }
 
@@ -118,16 +114,20 @@ function drawSpectrum(w, h) {
   const fft = metrics.fft
   if (!fft || fft.length === 0) return
 
+  const len = 64
+  const step = Math.floor(fft.length / len)
+
   ctx.beginPath()
   ctx.strokeStyle = '#ff6633'
   ctx.lineWidth = 2
   ctx.shadowColor = 'rgba(255, 102, 51, 0.3)'
   ctx.shadowBlur = 6
 
-  const len = fft.length
   ctx.moveTo(0, h)
   for (let i = 0; i < len; i++) {
-    const norm = fft[i] / 255
+    let sum = 0
+    for (let j = 0; j < step; j++) sum += fft[i * step + j] || 0
+    const norm = (sum / step) / 255
     const x = (i / len) * w
     const y = h - norm * h * 0.88
     ctx.lineTo(x, y)

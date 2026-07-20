@@ -1,5 +1,5 @@
 const {
-  app, Tray, Menu, BrowserWindow, ipcMain, nativeImage, session
+  app, Tray, Menu, BrowserWindow, ipcMain, nativeImage, session, shell
 } = require('electron')
 const path = require('path')
 
@@ -211,6 +211,10 @@ function createVisualizerWindow() {
     }
   })
   visualizerWindow.loadFile(path.join(__dirname, 'renderer', 'visualizer.html'))
+  visualizerWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url)
+    return { action: 'deny' }
+  })
   visualizerWindow.on('close', (e) => {
     if (!app.isQuitting) {
       e.preventDefault()

@@ -89,3 +89,7 @@ The app is unsigned by default — right-click → Open to bypass Gatekeeper on 
 ## Privacy
 
 All audio is processed locally. No data is sent over the network.
+
+---
+
+Created by [Tejas Sabunkar](https://tsabunkar.com). If you like this app, feel free to support → https://tsabunkar.com/#support
