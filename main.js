@@ -202,6 +202,7 @@ function createVisualizerWindow() {
     minWidth: 300,
     minHeight: 300,
     title: 'SoundBar Visualizer',
+    icon: path.join(__dirname, 'favicon.png'),
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -237,6 +238,7 @@ app.whenReady().then(() => {
     }
   })
 
+  if (app.dock) app.dock.setIcon(path.join(__dirname, 'favicon.png'))
   createTray()
   createVisualizerWindow()
 
