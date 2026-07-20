@@ -1,15 +1,14 @@
 # SoundBar Monitor
 
-macOS menu bar app that captures microphone audio and displays a live waveform in the tray icon, with a detachable visualizer window.
+macOS menu bar app that captures microphone audio and displays live audio visualization in the tray icon, with a visualizer window.
 
 ## Features
 
-- **Menu bar icon** — live waveform in the tray (4 visual styles synced to the visualizer window)
+- **Menu bar icon** — live audio visualization in the tray (4 styles synced to the visualizer window)
 - **Visualizer window** — real-time canvas rendering with 4 modes: Bars, Waveform, Spectrum, Circle
 - **Mic input selector** — choose any connected microphone from the toolbar dropdown
-- **Safe zone presets** — EBU R128, Podcast/Speech, Music Production (selectable from tray menu)
+- **Safe zone presets** — EBU R128, Podcast/Speech, Music Production (selectable from tray right-click menu)
 - **RMS/Peak metering** — tooltip shows current levels in dBFS
-- **No hidden windows** — audio pipeline runs directly in the visible visualizer window
 
 ## Requirements
 
@@ -19,20 +18,13 @@ macOS menu bar app that captures microphone audio and displays a live waveform i
 ## Setup
 
 ```bash
-# Use correct Node version
 nvm use
-
-# Install dependencies
 npm install
 ```
 
 ## Usage
 
 ```bash
-# Development mode (with dev hints)
-npm run dev
-
-# Or just
 npm start
 ```
 
@@ -44,16 +36,16 @@ npm start
 | Cycle visualizer style | Click `‹` / `›` in the toolbar |
 | Select microphone | Choose from the dropdown in the visualizer toolbar |
 | Switch safe zone preset | Right-click tray icon → Presets |
-| Open DevTools | Click the ⚙ button in the visualizer toolbar |
+| Open DevTools | Click `⚙` in the visualizer toolbar |
 
 ### Visualizer Styles
 
 | Style | Description |
 |---|---|
-| Bars | 64 scrolling bars in the voice-frequency range |
-| Waveform | Center-symmetrical waveform line |
-| Spectrum | Bottom-up full-range frequency spectrum |
-| Circle | Pulsing filled ring that responds to RMS + FFT |
+| Bars | 64 columns mapped across the frequency spectrum |
+| Waveform | Center-symmetrical line across the canvas |
+| Spectrum | Bottom-up frequency spectrum with gradient fill |
+| Circle | Pulsing ring that responds to RMS level + FFT |
 
 ### Safe Zone Presets
 
@@ -84,7 +76,7 @@ soundbar-monitor/
 
 ## Packaging
 
-Build a standalone `.dmg` for distribution:
+Build a standalone `.dmg`:
 
 ```bash
 npm run dist
@@ -92,8 +84,8 @@ npm run dist
 
 Output: `dist/SoundBar Monitor-1.0.0-arm64.dmg`
 
-**Note:** The app is unsigned by default. On first launch, macOS may block it — right-click the app → **Open** to bypass Gatekeeper. To sign it, set `CSC_LINK` and `CSC_KEY_PASSWORD` environment variables with your Apple Developer certificate.
+The app is unsigned by default — right-click → Open to bypass Gatekeeper on first launch. To sign, set `CSC_LINK` and `CSC_KEY_PASSWORD` with an Apple Developer certificate.
 
 ## Privacy
 
-This app processes all audio **locally on your machine**. No audio data is ever sent over the network. The only permission required is microphone access, which is requested when the app starts.
+All audio is processed locally. No data is sent over the network.
