@@ -1,4 +1,4 @@
-# SoundBar Monitor
+# SoundBar Monitor v2.0.0
 
 macOS menu bar app that captures microphone audio and displays live audio visualization in the tray icon, with a visualizer window.
 
@@ -9,6 +9,9 @@ macOS menu bar app that captures microphone audio and displays live audio visual
 - **Mic input selector** — choose any connected microphone from the toolbar dropdown
 - **Safe zone presets** — EBU R128, Podcast/Speech, Music Production (selectable from tray right-click menu)
 - **RMS/Peak metering** — tooltip shows current levels in dBFS
+- **Auto-update** — checks GitHub for new releases and installs them automatically
+- **Dock icon** — custom favicon shown in the dock
+- **Mic selection gate** — visualization starts only after picking a specific microphone
 
 ## Requirements
 
@@ -42,9 +45,9 @@ npm start
 
 | Style | Description |
 |---|---|
-| Bars | 64 columns mapped across the frequency spectrum |
-| Waveform | Center-symmetrical line across the canvas |
-| Spectrum | Bottom-up frequency spectrum with gradient fill |
+| Bars | 32 bars across the frequency spectrum |
+| Waveform | Smooth bottom-up frequency line with blue glow |
+| Spectrum | Filled frequency spectrum with orange gradient |
 | Circle | Pulsing ring that responds to RMS level + FFT |
 
 ### Safe Zone Presets
@@ -62,14 +65,13 @@ npm start
 soundbar-monitor/
 ├── main.js                     # Electron main process
 ├── preload.js                  # Context bridge API
+├── favicon.png                 # App icon
 ├── renderer/
 │   ├── visualizer.html         # Visualizer window
 │   ├── visualizer.js           # Canvas rendering & UI
 │   ├── visualizer.css          # Styles
 │   └── shared/
 │       └── audio-pipeline.js   # Audio capture & FFT engine
-├── build/
-│   └── entitlements.mac.plist  # macOS entitlements for mic access
 └── assets/
     └── icon.svg                # App icon source
 ```
@@ -82,7 +84,17 @@ Build a standalone `.dmg`:
 npm run dist
 ```
 
-Output: `dist/SoundBar Monitor-1.0.0-arm64.dmg`
+Output: `dist/SoundBar Monitor-2.0.0-arm64.dmg`
+
+### Auto-Update
+
+Publish a new release:
+
+```bash
+npm run release
+```
+
+This builds the app and uploads it to GitHub Releases. Users on v2.0.0+ will automatically download and install future updates on launch.
 
 The app is unsigned by default — right-click → Open to bypass Gatekeeper on first launch. To sign, set `CSC_LINK` and `CSC_KEY_PASSWORD` with an Apple Developer certificate.
 
