@@ -2,7 +2,6 @@ const {
   app, Tray, Menu, BrowserWindow, ipcMain, nativeImage, session, shell
 } = require('electron')
 const path = require('path')
-const { autoUpdater } = require('electron-updater')
 
 let tray
 let visualizerWindow
@@ -243,7 +242,6 @@ app.whenReady().then(() => {
     }
   })
 
-  autoUpdater.checkForUpdatesAndNotify()
   if (app.dock) app.dock.setIcon(path.join(__dirname, 'favicon.png'))
   createTray()
   createVisualizerWindow()
@@ -263,10 +261,6 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit', () => {
   app.isQuitting = true
-})
-
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall()
 })
 
 ipcMain.on('audio-metrics', (_event, metrics) => {
